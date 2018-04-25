@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  include ./nav.jade
+  h1 Polls
+  br
+  div 
+    a(class="button" href="/polls/new") New Poll
+  br
+  ul
+    each poll in polls
+      li(class="polls")
+        - var date = poll.date.toDateString()
+        div(class="polls__date") #{date}
+        div(class="polls__question")
+          a(href="/polls/poll/#{poll.id}" class="polls__poll") #{poll.question}

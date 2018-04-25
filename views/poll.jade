@@ -1,0 +1,65 @@
+extends layout
+
+block content
+  include ./nav.jade
+  h1 Poll
+  br
+  div(class="poll")
+    div(class="poll__question") 
+      h2 Q: #{poll.question}
+    div(class="row")
+      div(class="poll__answers")
+        h2 Choices:
+        select(id="choices" form="form" name="choices")
+          each choice in poll.choices
+            option(value="#{choice.choice}") #{choice.choice}
+        form(action="/polls/poll/#{poll.id}/vote" method="post" id="form" class="form")
+          input(type="text" placeholder="Custom answer" name="custom" class="form__custom")
+          div(class="vote-button-container")
+            button(type="submit" class="button") Vote
+          br
+          if user
+            div(class="delete-button-container")
+              div
+                a(href="/polls/poll/#{poll.id}/delete" id="delete" class="button") Delete
+          div(class="share-container")
+            if user
+              a(href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false") Tweet
+      div(class="poll__chart")
+        canvas(width="400px" height="400px" id="chart")
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js')
+  script.
+    window.onload=function(){
+    console.log('Poll has loaded')
+    // Get chart
+    const ctx = document.getElementById("chart");
+    // Get poll
+    const poll = !{JSON.stringify(poll).replace(/<\//g, '<\\/')}
+    const choices = poll.choices.map(object=>object.choice)
+    const votes = poll.choices.map(object=>object.votes)
+    const data = votes;
+    // And for a doughnut chart
+    var myDoughnutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+        datasets: [{
+            data: data,
+          backgroundColor: data.map(e=>generateColors())
+        }],
+
+        // These labels appear in the legend and in the tooltips when hovering different arcs
+        labels: choices
+    },
+        options: {
+        maintainAspectRatio:false
+        }
+    });
+    function generateColors(){
+      const red = Math.floor(Math.random() * 255);
+      const green = Math.floor(Math.random() * 255);
+      const blue = Math.floor(Math.random() * 255);
+      return `rgba(${red}, ${green}, ${blue})`;
+    }
+    }
+    
+  script(async src="https://platform.twitter.com/widgets.js" charset="utf-8")  

@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  include ./nav.jade
+  h2 New Poll
+  br
+  div
+    form(action='/polls/new' method='post' class="new-poll")
+      div(class="new-poll__question")
+        div
+          label Question
+        div
+          input(placeholder="Poll Name" value='red or blue?' id="question" name="question")
+      div
+        div
+          label Answers
+        div
+          textarea(placeholder="Choices seperated by commas." id="choices" name="choices") red,blue
+      div
+        button(type='submit' class="button") Save

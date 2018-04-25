@@ -1,0 +1,7 @@
+div(class="navigation")
+  if user
+      a(class="button" href='/logout') Logout
+      a(class="button" href='/user') My Polls
+      a(class="button" href='/polls') All Polls
+  else
+      a(class="button" href='/login') Login
